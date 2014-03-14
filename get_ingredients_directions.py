@@ -2,6 +2,7 @@ import urllib2
 from bs4 import BeautifulSoup
 from recipe import Recipe, Ingredient
 
+#soup = BeautifulSoup(urllib2.urlopen(str(sys.argv[0])).read())
 soup = BeautifulSoup(urllib2.urlopen('http://allrecipes.com/Recipe/Easy-Tuna-Patties/Detail.aspx?soid=carousel_0_rotd&prop24=rotd').read())
 
 ingredient_tags = soup.find_all(class_="fl-ing")
