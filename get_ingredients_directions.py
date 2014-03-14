@@ -9,8 +9,22 @@ ingredient_tags = soup.find_all(class_="fl-ing")
 ingredients = []
 
 for ingr in ingredient_tags:
-	chunks = ingr.text.lstrip('\n').rstrip('\n').split('\n')
-	ingredients.append(Ingredient(chunks[0],chunks[1]))
+    chunks = ingr.text.lstrip('\n').rstrip('\n').split('\n')
+    amt_unit= chunks[0].split()
+    print amt_unit
+    if len(amt_unit)>1:
+        amt = amt_unit[0][0]
+        unit = ""
+        for i in range(1,len(amt_unit)):
+            unit += amt_unit[i]
+        print "amt is: " + str(amt)
+        print "unit is:" + str(unit) 
+    else:
+        amt = amt_unit[0]
+        unit = "unit"
+        print "amt is: " + str(amt)
+        print "unit is:" + str(unit) 
+    ingredients.append(Ingredient(chunks[1],amt, unit))
 	
 
 direction_tags = soup.find_all(class_="plaincharacterwrap break")
@@ -21,3 +35,7 @@ for d in direction_tags:
 recipe = Recipe(ingredients,all_directions)
 
 print recipe
+
+
+#json_output = recipe.jsonify()
+#print json_output
