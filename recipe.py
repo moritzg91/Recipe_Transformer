@@ -40,7 +40,8 @@ class Recipe(object):
 		if dimesnion=="healthiness" and direction=="unhealthy":
 			pass
 			#Fry instead of bake, etc
-		#Need one more. Vegetarian to vegan and back?
+		#Regular to Vegetarian. Replace meat by cheese/tofu or skip meat.
+		#Regular to Vegan. Replace meat by tofu, milk by soya milk, skip cheese or replace by tofu cheese 
 
 	#does not mutate any of the field of Recipe - only returns the json output required by the automatic grader.
 	def jsonify(self):
