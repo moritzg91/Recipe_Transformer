@@ -1,6 +1,15 @@
 Tools:
 
-Spatula, Knife, Cooker, Pan, Yogurt maker, Peeler, Cube Tray, Strainer, Fruit Muddler, Freezer Tray, Fry Pan, Cake Pan, Foil, Cuisinart, Grinder, Mincer, Hullster, Shaker, Grate and Slice set, scale, Measuring cups, spoon , fork, press, whisk, skimmer, tongs, potato masher, soup ladle, Brush,Can opener, juicer press, floor sifter, pizza wheel, tea ball, pepper grinder, salt shaker, grater, Corkscrew, Lid, Bowl, Measuring Cup, Utensil, Egg topper, Cheese slicer, Scoop, Skimmer, Strainer, Serve Ladle, Saute Spoon, Cutting Board, Spill Stopper, Splatter Screen, Turner, Egg beater, Potato Ricer, Food Mill, Grater, Peeler, Slicer , Stripper, Corn Zipper, Shear, Snips, Chopper, Mandoline, Mortar & Pestle, Can, Mister, Seal, Stopper, Pourer, Scale, Timer, Thermometer, Board, Cloth, Parchment Roll, Aluminium Foil, Cupcake Liners, Decorating Pen, Muffin Papers, Baking Cups, Bags, Smoother, Sieve, Wheel, Shield, Blender, Scraper, Lifter, Gloves, Rack, Rolling Pin, Skewer, Wrangler, Oven, Microwave, Lighter, Probe, Rack, saucepan, baking dish, plastic bag, paper warp, pan, dish, skillet, casserole
+Spatula, Knife, Cooker, Pan, Yogurt maker, Peeler, Cube Tray, Strainer, Fruit Muddler, Freezer Tray, Fry Pan, 
+Cake Pan, Foil, Cuisinart, Grinder, Mincer, Hullster, Shaker, Grate and Slice set, scale, Measuring cups, spoon , 
+fork, press, whisk, skimmer, tongs, potato masher, soup ladle, Brush,Can opener, juicer press, floor sifter, 
+pizza wheel, tea ball, pepper grinder, salt shaker, grater, Corkscrew, Lid, Bowl, Measuring Cup, Utensil, Egg topper, 
+Cheese slicer, Scoop, Skimmer, Strainer, Serve Ladle, Saute Spoon, Cutting Board, Spill Stopper, Splatter Screen, 
+Turner, Egg beater, Potato Ricer, Food Mill, Grater, Peeler, Slicer , Stripper, Corn Zipper, Shear, Snips, Chopper, 
+Mandoline, Mortar & Pestle, Can, Mister, Seal, Stopper, Pourer, Scale, Timer, Thermometer, Board, Cloth, Parchment Roll, 
+Aluminium Foil, Cupcake Liners, Decorating Pen, Muffin Papers, Baking Cups, Bags, Smoother, Sieve, Wheel, Shield, Blender, 
+Scraper, Lifter, Gloves, Rack, Rolling Pin, Skewer, Wrangler, Oven, Microwave, Lighter, Probe, Rack, saucepan, baking dish, 
+plastic bag, paper warp, pan, dish, skillet, casserole
 
 
 Primary Methods:
@@ -22,4 +31,9 @@ Microwaving
 Rotisserie 
 Searing
 Smoking
-Blanching, Braising, Coddling, Double steaming, Infusion, Pressure cooking, Simmering, Smothering, Steeping, Stewing, Vacuum flask cooking, Marinate
+Blanching, Braising, Coddling, Double steaming, Infusion, Pressure cooking, Simmering, Smothering, Steeping, Stewing, 
+Vacuum flask cooking, Marinate
+
+
+Other cooking methods:
+chop, grate, stir, shake, mince, crush, squeeze, mix
