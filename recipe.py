@@ -14,7 +14,7 @@ class Recipe(object):
 		self.cooking_tools = self.get_c_tools(raw_directions) #List of strings
 
 	def get_pc_method(self, raw_directions):
-		methods_list = ['fry', 'bake', 'roast', 'broil', 'stew']
+		methods_list = ['fry', 'bake', 'roast', 'broil', 'stew','boil','steam','stew','barbeque','bast','grill','poach','sauté','microwave','rotisserie','sear','smoke','blanch', 'braise', 'coddle', 'infuse', 'pressure cook','simmer',' smother','steep','vacuum flask cook','marinate']
 		for method in methods_list:
 			if method in raw_directions.lower():
 				return method
