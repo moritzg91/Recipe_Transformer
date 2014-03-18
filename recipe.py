@@ -8,7 +8,7 @@ class Ingredient(object):
 
 class Recipe(object):
 	def __init__(self,ingredients,raw_directions):
-		self.ingredients = ingredients #List of Ingredient objects
+		self.ingredients = ingredients #List of Ingredient object
 		self.raw_directions = raw_directions #String (one long string)
 		self.primary_cooking_method = self.get_pc_method(raw_directions) #String (one word)
 		self.cooking_tools = self.get_c_tools(raw_directions) #List of strings
@@ -20,7 +20,7 @@ class Recipe(object):
 				return method
 
 	def get_c_tools(self, raw_directions):
-		c_tools_list = ["knife", "grater", "dutch oven", "cutting board", "colander", "funnel", "pot", "pan", "rolling pin", "meat tenderiser", "scissors", "sieve", "spatula", "skillet", "tongs"]
+		c_tools_list = ["knife", "grater", "dutch oven", "cutting board", "colander", "peeler", "saucepan","funnel", "pot", "pan", "rolling pin", "meat tenderiser", "scissors", "sieve", "spatula", "skillet", "tongs","Strainer"]
 		tools = []
 		for tool in c_tools_list:
 			if tool in raw_directions.lower():
