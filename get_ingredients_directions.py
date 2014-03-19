@@ -1,9 +1,11 @@
-import urllib2
+#import urllib2
+import requests
 from bs4 import BeautifulSoup
 from recipe import Recipe, Ingredient
 
+resp = requests.get('http://allrecipes.com/Recipe/Easy-Tuna-Patties/Detail.aspx?soid=carousel_0_rotd&prop24=rotd')
 #soup = BeautifulSoup(urllib2.urlopen(str(sys.argv[0])).read())
-soup = BeautifulSoup(urllib2.urlopen('http://allrecipes.com/Recipe/Easy-Tuna-Patties/Detail.aspx?soid=carousel_0_rotd&prop24=rotd').read())
+soup = BeautifulSoup(resp.text.lower(),"lxml")
 
 ingredient_tags = soup.find_all(class_="fl-ing")
 ingredients = []
@@ -34,8 +36,25 @@ for d in direction_tags:
 
 recipe = Recipe(ingredients,all_directions)
 
-print recipe
+# print recipe
 
+# print recipe.jsonify()
+
+choice = raw_input("What transformation do you want to do? (--help for help): ") # 
+if choice == '--help':
+    print "1: [to|from] vegetarian"
+
+else:
+    chunks = choice.split(' ')
+    direction = chunks[0]
+    dimension = chunks[1]
+    print "dimension: " + dimension
+    print "direction: " + direction
+
+    recipe.transform(dimension,direction)
+
+    print recipe
+    print recipe.jsonify()
 
 #json_output = recipe.jsonify()
 #print json_output
