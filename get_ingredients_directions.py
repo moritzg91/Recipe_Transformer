@@ -3,7 +3,7 @@ import requests, sys
 from bs4 import BeautifulSoup
 from recipe import Recipe, Ingredient
 
-DEBUG = True
+DEBUG = False
 
 if __name__ == "__main__":
 
@@ -13,6 +13,8 @@ if __name__ == "__main__":
         url = sys.argv[1]
         if '--output=json' in sys.argv:
             output_format = 'json'
+        if '--debug=True' in sys.argv:
+            DEBUG = True
     else:
         url = 'http://allrecipes.com/Recipe/Easy-Tuna-Patties/Detail.aspx?soid=carousel_0_rotd&prop24=rotd'
 
@@ -57,6 +59,8 @@ if __name__ == "__main__":
     choice = raw_input("What transformation do you want to do? (--help for help): ") # 
     if choice == '--help':
         print "1: [to|from] vegetarian"
+        print "2: [to|from] healthy"
+        print "3: [to|from] mexican"
 
     else:
         chunks = choice.split(' ')

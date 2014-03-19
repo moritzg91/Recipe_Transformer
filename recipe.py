@@ -243,9 +243,13 @@ class Recipe(object):
 		return json.dumps(json_output)
 
 	def __str__(self):
-		s = "----- Ingredients: -----\n"
+		s = "\n----- Ingredients: -----\n"
 		for i in self.ingredients:
 			s += str(i.amt) + " " + i.measurement + ' of: ' + i.name + '\n'
+			if i.preparation != '':
+				s += '\t-Preparation: ' + str(i.preparation) + '\n'
+			if i.descriptor:
+				s += '\t-Descriptor: ' + str(i.descriptor) + '\n'
 		s += '\n----- Directions: -----\n' + self.raw_directions + '\n'
 		s += '\n----- Primary Cooking Method: -----\n' + self.primary_cooking_method + '\n'
 		s += '\n----- Cooking Tools: -----\n' + str(self.cooking_tools) + '\n'
