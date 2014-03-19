@@ -1,0 +1,4 @@
+Name			Calories		Type				Cuisine		Substitutions
+Mayonnaise		150				Unhealthy			None		Vegennaise
+Vegennaise		100				Healthy				None		Mayonnaise
+Chorizo			-				Unhealthy, Meat		Mexican		Italian Sausage
