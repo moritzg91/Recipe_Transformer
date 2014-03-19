@@ -1,0 +1,6 @@
+[a-zA-Z]*[ ]?chopped
+[a-zA-Z]*[ ]?ground
+drained
+diced
+mashed
+grated

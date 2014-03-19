@@ -1,13 +1,17 @@
 import json 
-import sqlite3, nltk
+import sqlite3, nltk, re
 
 dbname = 'transformation_db'
 
 class Ingredient(object):
-	def __init__(self,name, amt, measurement, calories = None, type_ = [], cuisine = None, parent = None):
+	def __init__(self,name, amt, measurement, descriptor = None, calories = None, type_ = [], cuisine = None, parent = None):
 		self.amt = amt
 		self.measurement = self.expand_measurements(measurement)
 		self.parse_name(name)
+		if descriptor: # if an explicit descriptor is given it superseded automated parsing
+			self.descriptor = descriptor
+		self.preparation = ''
+		self.split_descriptor_and_prep()
 		self.calories = calories
 		self.type = type_
 		self.cuisine = cuisine
@@ -18,6 +22,16 @@ class Ingredient(object):
 			self.populate_from_db()
 
 		print self.name + ": " + str(self.substitutes)
+
+	def split_descriptor_and_prep(self):
+		preps = Recipe.get_objs_from_file('preparations.txt')
+		for p in preps:
+			res = re.findall(p, self.descriptor)
+			if res:
+				self.preparation = res[0]
+				self.descriptor = ''.join(self.descriptor.split(res[0]))
+				return
+		return
 
 	def parse_name(self,raw_name):
 		descriptor = []
@@ -95,15 +109,32 @@ class Ingredient(object):
 				for sub in sublist:
 					c.execute("SELECT * FROM transformations WHERE name = ?", (sub,))
 					record2 = c.fetchone()
-					new_ingredient = Ingredient(name=record2[0],amt=self.convert_amounts(self.name,record2[0]), measurement=self.measurement, calories = record2[1], type_ = record2[2].split(','), cuisine = record2[3], parent = self)
+					descr, amnt = self.convert_amounts(self.name,record2[0])
+					new_ingredient = Ingredient(name=record2[0],
+												amt=amnt,
+												descriptor=descr,
+												measurement=self.measurement,
+												calories = record2[1],
+												type_ = record2[2].split(','),
+												cuisine = record2[3],
+												parent = self)
 					self.substitutes.append(new_ingredient)
 			else:
 				self.sublist = [parent]
-		conn.commit()
 		conn.close()
 
-	def convert_amounts(self,name1,name2):
-		return self.amt
+	def convert_amounts(self,from_name,to_name):
+		conn = sqlite3.connect(dbname)
+		c = conn.cursor()
+		c.execute("SELECT * FROM modifiers WHERE from_ingr = ? AND to_ingr = ?", (from_name, to_name,))
+		row = c.fetchone()
+		modifier = row[2]
+		weight_mul = row[3]
+		conn.close()
+
+		amnt = float(self.amt) * float(weight_mul)
+
+		return modifier,amnt
 
 	def __str__(self):
 		return self.name + ', ' + str(self.type)
@@ -121,20 +152,21 @@ class Recipe(object):
 		self.cooking_tools = self.get_c_tools(raw_directions) #List of strings
 
 	def get_pc_method(self, raw_directions):
-		methods_list = self.get_objs_from_file('methods.txt')
+		methods_list = Recipe.get_objs_from_file('methods.txt')
 		for method in methods_list:
 			if method in raw_directions.lower():
 				return method
 
 	def get_c_tools(self, raw_directions):
-		c_tools_list = self.get_objs_from_file('tools.txt')
+		c_tools_list = Recipe.get_objs_from_file('tools.txt')
 		tools = []		
 		for tool in c_tools_list:		
 			if tool in raw_directions.lower():
 				tools.append(tool)
 		return tools
 
-	def get_objs_from_file(self,fname):
+	@staticmethod
+	def get_objs_from_file(fname):
 		arr = []
 		f = open(fname)
 		for line in f.readlines():
@@ -203,7 +235,8 @@ class Recipe(object):
 					"name": i.name,
 					"quantity": i.amt,
 					"measurement": i.measurement,
-					"descriptor": i.descriptor
+					"descriptor": i.descriptor,
+					"preparation": i.preparation
 				}
 			)
 
@@ -212,7 +245,7 @@ class Recipe(object):
 	def __str__(self):
 		s = "----- Ingredients: -----\n"
 		for i in self.ingredients:
-			s += i.amt + " " + i.measurement + ' of: ' + i.name + '\n'
+			s += str(i.amt) + " " + i.measurement + ' of: ' + i.name + '\n'
 		s += '\n----- Directions: -----\n' + self.raw_directions + '\n'
 		s += '\n----- Primary Cooking Method: -----\n' + self.primary_cooking_method + '\n'
 		s += '\n----- Cooking Tools: -----\n' + str(self.cooking_tools) + '\n'
