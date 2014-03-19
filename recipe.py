@@ -1,5 +1,5 @@
 import json 
-import sqlite3, re
+import sqlite3, nltk
 
 dbname = 'transformation_db'
 
@@ -7,7 +7,7 @@ class Ingredient(object):
 	def __init__(self,name, amt, measurement, calories = None, type_ = [], cuisine = None, parent = None):
 		self.amt = amt
 		self.measurement = self.expand_measurements(measurement)
-		self.name,self.descriptor = self.clean_name(name)
+		self.parse_name(name)
 		self.calories = calories
 		self.type = type_
 		self.cuisine = cuisine
@@ -19,14 +19,24 @@ class Ingredient(object):
 
 		print self.name + ": " + str(self.substitutes)
 
-	def clean_name(self,raw_name):
-		descriptor = None
-		name = raw_name
-		chunks = raw_name.split(",")
-		if len(chunks) > 1:
-			name = chunks[0]
-			descriptor = chunks[1]
-		return (name,descriptor)
+	def parse_name(self,raw_name):
+		descriptor = []
+		name = []
+
+		tokens = nltk.word_tokenize(raw_name)
+		tagged = nltk.pos_tag(tokens)
+		print tagged
+
+		for t in tagged:
+			if 'NN' in t[1] or 'JJ' in t[1] or 'VBN' in t[1]:
+				name.append(t[0])
+			elif len(t[1]) > 1:
+				descriptor.append(t[0])
+			# else it's punctuation or something so just ignore it
+
+		self.descriptor = ' '.join(descriptor)
+		self.name = ' '.join(name)
+		return
 
 	def expand_measurements(self,measurement):
 		replacements = {
@@ -96,7 +106,7 @@ class Ingredient(object):
 		return self.amt
 
 	def __str__(self):
-		return self.name + ', ' + self.type
+		return self.name + ', ' + str(self.type)
 
 	def __repr__(self):
 		return str(self)
@@ -192,7 +202,8 @@ class Recipe(object):
 				{
 					"name": i.name,
 					"quantity": i.amt,
-					"measurement": i.measurement
+					"measurement": i.measurement,
+					"descriptor": i.descriptor
 				}
 			)
 
