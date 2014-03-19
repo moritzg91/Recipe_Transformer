@@ -4,7 +4,7 @@ import sqlite3, re
 dbname = 'transformation_db'
 
 class Ingredient(object):
-	def __init__(self,name, amt, measurement, calories = None, type_ = None, cuisine = None, parent = None):
+	def __init__(self,name, amt, measurement, calories = None, type_ = [], cuisine = None, parent = None):
 		self.amt = amt
 		self.measurement = self.expand_measurements(measurement)
 		self.name,self.descriptor = self.clean_name(name)
@@ -47,7 +47,27 @@ class Ingredient(object):
 	def replace(self,type_):
 		if type_ == 'vegetarian':
 			for sub in self.substitutes:
-				if sub.type != "meat" and sub.type != "fish":
+				if ("meat" not in sub.type) and ("fish" not in sub.type):
+					return sub
+		if type_ == 'nonvegetarian':
+			for sub in self.substitutes:
+				if ('meat' in sub.type) or ('fish' in sub.type):
+					return sub
+		if type_ == 'mexican':
+			for sub in self.substitutes:
+				if sub.type == 'mexican':
+					return sub
+		if type_ == 'unmexican':
+			for sub in self.substitutes:
+				if sub.type != 'mexican':
+					return sub
+		if type_ == 'healthy':
+			for sub in self.substitutes:
+				if ('healthy' in sub.type):
+					return sub
+		if type_ == 'unhealthy':
+			for sub in self.substitutes:
+				if ('healthy' not in sub.type):
 					return sub
 		return self
 
@@ -58,14 +78,14 @@ class Ingredient(object):
 		record = c.fetchone()
 		if record:
 			self.calories = record[1]
-			self.type = record[2]
+			self.type = record[2].split(',')
 			self.cuisine = record[3]
 			if recurse:
 				sublist = record[4].split(',')
 				for sub in sublist:
 					c.execute("SELECT * FROM transformations WHERE name = ?", (sub,))
 					record2 = c.fetchone()
-					new_ingredient = Ingredient(name=record2[0],amt=self.convert_amounts(self.name,record2[0]), measurement=self.measurement, calories = record2[1], type_ = record2[2], cuisine = record2[3], parent = self)
+					new_ingredient = Ingredient(name=record2[0],amt=self.convert_amounts(self.name,record2[0]), measurement=self.measurement, calories = record2[1], type_ = record2[2].split(','), cuisine = record2[3], parent = self)
 					self.substitutes.append(new_ingredient)
 			else:
 				self.sublist = [parent]
@@ -80,7 +100,6 @@ class Ingredient(object):
 
 	def __repr__(self):
 		return str(self)
-
 
 
 
@@ -117,28 +136,49 @@ class Recipe(object):
 		if dimension == 'vegetarian' and direction == 'to':
 			print "transforming to vegetarian"
 			for i in self.ingredients:
-				if i.type == 'meat' or i.type == 'fish':
+				if ('meat' in i.type) or ('fish' in i.type):
 					new_ingredients.append(i.replace('vegetarian'))
 				else:
 					new_ingredients.append(i)
+
+		elif dimension == 'vegetarian' and direction == 'from':
+			print "transforming from vegetarian"
+			for i in self.ingredients:
+				if ('vegetable' in i.type):
+					new_ingredients.append(i.replace('nonvegetarian'))
+				else:
+					new_ingredients.append(i)
+
+		elif dimension == 'healthy' and direction == 'to':
+			for i in self.ingredients:
+				if ('healthy' not in i.type):
+					new_ingredients.append(i.replace('healthy'))
+				else:
+					new_ingredients.append(i)
+
+		elif dimension == 'healthy' and direction == 'from':
+			for i in self.ingredients:
+				if ('healthy' in i.type):
+					new_ingredients.append(i.replace('unhealthy'))
+				else:
+					new_ingredients.append(i)
+
+		elif dimension == 'mexican' and direction == 'to':
+			for i in self.ingredients:
+				if ('mexican' not in i.cuisine):
+					new_ingredients.append(i.replace('mexican'))
+				else:
+					new_ingredients.append(i)
+
+		elif dimension == 'mexican' and direction == 'from':
+			for i in self.ingredients:
+				if ('mexican' in i.type):
+					new_ingredients.append(i.replace('unmexican'))
+				else:
+					new_ingredients.append(i)
+
 		self.ingredients = new_ingredients
 		return
-			# lookup all meat ingredients
-			# replace with vegetarian options (adjust amounts and cooking method if necessary)
-		# if dimension=="cuisine" and direction=="mexican":
-		# 	pass
-		# 	#Mexicanify the recipe by mutating its own fields
-		# if dimension=="cuisine" and direction=="italian":
-		# 	pass
-		# 	#Italinify the recipe
-		# if dimension=="healthiness" and direction=="healthy":
-		# 	pass
-		# 	#Replace butter with applesauce, frying with baking, etc
-		# if dimesnion=="healthiness" and direction=="unhealthy":
-		# 	pass
-			#Fry instead of bake, etc
-		#Regular to Vegetarian. Replace meat by cheese/tofu or skip meat.
-		#Regular to Vegan. Replace meat by tofu, milk by soya milk, skip cheese or replace by tofu cheese 
 
 	#does not mutate any of the field of Recipe - only returns the json output required by the automatic grader.
 	def jsonify(self):
